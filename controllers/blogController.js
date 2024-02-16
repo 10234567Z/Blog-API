@@ -1,8 +1,14 @@
 const { body, validationResult } = require("express-validator");
 const asyncHandler = require("express-async-handler");
 
+const Blog = require("../models/blog")
+
 exports.home = asyncHandler(async(req , res , next) => {
-    res.json("Home : To be implemented")
+    const firstFive = await Blog.find({}).limit(5)
+    if(!firstFive.length){
+        res.json("No blogs present")
+    }
+    res.json(firstFive)
 })
 exports.getList = asyncHandler(async(req , res , next) => {
     res.json("Get List : To be implemented")
