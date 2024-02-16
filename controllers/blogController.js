@@ -6,12 +6,16 @@ const Blog = require("../models/blog")
 exports.home = asyncHandler(async(req , res , next) => {
     const firstFive = await Blog.find({}).limit(5)
     if(!firstFive.length){
-        res.json("No blogs present")
+        res.json("No blogs present yet...But you can make it!")
     }
     res.json(firstFive)
 })
 exports.getList = asyncHandler(async(req , res , next) => {
-    res.json("Get List : To be implemented")
+    const allBlogs = await Blog.find({})
+    if(!allBlogs.length){
+        res.json("No blogs present")
+    }
+    res.json(allBlogs)
 })
 exports.getBlog = asyncHandler(async(req , res , next) => {
     res.json("Get Blog : To be implemented")
