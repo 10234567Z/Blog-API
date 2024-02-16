@@ -2,6 +2,8 @@ const express = require("express");
 const path = require("path");
 const session = require("express-session");
 const passport = require("passport");
+const cors = require("cors")
+
 require('dotenv').config()
 
 const mongoose = require("mongoose");
@@ -16,6 +18,7 @@ db.on("error", console.error.bind(console, "mongo connection error"));
 
 const app = express();
 
+app.use(cors())
 app.use(session({ secret: process.env.SESSION_SEC, resave: false, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
