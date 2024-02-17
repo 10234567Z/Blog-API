@@ -11,7 +11,7 @@ const commentController = require("../controllers/commentController")
 router.get("/", blogController.home)
 router.get("/blogs", blogController.getList)
 router.get("/blogs/:blogId", blogController.getBlog)
-router.post("/blogs/", blogController.create)
+router.post("/blogs", blogController.create)
 router.put("/blogs/:blogId", blogController.update)
 router.delete("/blogs/:blogId", blogController.delete)
 
@@ -19,7 +19,7 @@ router.delete("/blogs/:blogId", blogController.delete)
 // User
 router.get("/users/:userId", userController.getUser)
 router.post("/users" , userController.create)
-router.put("users/:userId" , userController.update)
+router.put("/users/:userId" , userController.update)
 router.delete("/users/:userId" , userController.delete)
 
 
