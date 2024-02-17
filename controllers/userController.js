@@ -1,11 +1,14 @@
 const { body, validationResult } = require("express-validator");
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcryptjs")
+const express = require("express")
+
+const app = express()
 
 const User = require("../models/user")
 
 exports.getUser = asyncHandler(async (req, res, next) => {
-    res.json("Get User : To be implemented")
+
 })
 
 exports.create = [
