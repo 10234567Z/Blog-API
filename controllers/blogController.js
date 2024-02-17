@@ -17,7 +17,10 @@ exports.getList = asyncHandler(async (req, res, next) => {
     }
     res.json(allBlogs)
 })
-exports.getBlog = [
+exports.getBlog = asyncHandler(async (req, res, next) => {
+    res.json("Get Blogs : Not implemented yet")
+})
+exports.create = [
     body("title")
         .trim()
         .isLength({ min: 1 })
@@ -30,23 +33,29 @@ exports.getBlog = [
         .withMessage("The text content should be more than 100 words"),
     asyncHandler(async (req, res, next) => {
         const error = validationResult(req)
-        if(!error.isEmpty()){
+        if (!error.isEmpty()) {
             res.json(error.errors[0].msg)
         }
+        const currentdate = new Date();
+        const datetime = currentdate.getDate() + "/"
+            + (currentdate.getMonth() + 1) + "/"
+            + currentdate.getFullYear() + " @ "
+            + currentdate.getHours() + ":"
+            + currentdate.getMinutes() + ":"
+            + currentdate.getSeconds();
+
         const blog = new Blog({
             user: req.body.user,
             title: req.body.title,
             text: req.body.text,
-            timeStamp: req.body.timeStamp,
+            timeStamp: datetime,
             public: req.body.public
         })
         await blog.save()
         res.json(`${req.body.user}'s blog is posted successfully`)
     })
 ]
-exports.create = asyncHandler(async (req, res, next) => {
-    res.json("Create : To be implemented")
-})
+
 exports.update = asyncHandler(async (req, res, next) => {
     res.json("Update : To be implemented")
 })
