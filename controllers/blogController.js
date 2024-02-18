@@ -2,6 +2,7 @@ const { body, validationResult } = require("express-validator");
 const asyncHandler = require("express-async-handler");
 
 const Blog = require("../models/blog")
+const User = require("../models/user")
 
 exports.home = asyncHandler(async (req, res, next) => {
     const firstFive = await Blog.find({}).limit(5)
@@ -35,7 +36,7 @@ exports.create = [
     asyncHandler(async (req, res, next) => {
         const error = validationResult(req)
         if (!error.isEmpty()) {
-            res.json(error.errors[0].msg)
+            res.json(error)
         }
         const currentdate = new Date();
         const datetime = currentdate.getDate() + "/"
@@ -44,21 +45,16 @@ exports.create = [
             + currentdate.getHours() + ":"
             + currentdate.getMinutes() + ":"
             + currentdate.getSeconds();
-        if(req.user){
-
-        }
-        else{
-            
-        }
+        const user = await User.findOne({userName: req.body.userName})
         const blog = new Blog({
-            user: req.body.user,
+            user: user._id,
             title: req.body.title,
-            text: req.user._id,
+            text: req.body.text,
             timeStamp: datetime,
             public: req.body.public
         })
         await blog.save()
-        res.json(`${req.body.user}'s blog is posted successfully`)
+        res.json({success: true , blog: blog})
     })
 ]
 
