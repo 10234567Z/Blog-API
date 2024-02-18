@@ -11,6 +11,7 @@ exports.home = asyncHandler(async (req, res, next) => {
     }
     res.json(firstFive)
 })
+
 exports.getList = asyncHandler(async (req, res, next) => {
     const allBlogs = await Blog.find({})
     if (!allBlogs.length) {
@@ -18,8 +19,13 @@ exports.getList = asyncHandler(async (req, res, next) => {
     }
     res.json(allBlogs)
 })
+
 exports.getBlog = asyncHandler(async (req, res, next) => {
-    
+    const blog = await Blog.findById(req.params['blogId'])
+    if(!blog){
+        res.json({success: false , msg: "No blog found with that id"})
+    }
+    res.json({success: true , blog: blog})
 })
 
 exports.create = [
