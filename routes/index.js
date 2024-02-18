@@ -13,22 +13,21 @@ const commentController = require("../controllers/commentController")
 router.get("/", blogController.home)
 router.get("/blogs", blogController.getList)
 router.get("/blogs/:blogId", blogController.getBlog)
-router.post("/blogs", blogController.create)
-router.put("/blogs/:blogId", blogController.update)
-router.delete("/blogs/:blogId", blogController.delete)
+router.post("/blogs", passport.authenticate("jwt", { session: false }), blogController.create)
+router.put("/blogs/:blogId", passport.authenticate("jwt", { session: false }) , blogController.update)
+router.delete("/blogs/:blogId", passport.authenticate("jwt", { session: false }) , blogController.delete)
 
 
 // User
-router.get("/users/:userId", userController.getUser)
 router.post("/signup", userController.create)
 router.post("/login", userController.login)
-router.put("/users/:userId", userController.update)
-router.delete("/users/:userId", userController.delete)
+router.put("/users/:userId" , passport.authenticate("jwt", { session: false }) , userController.update)
+router.delete("/users/:userId" , passport.authenticate("jwt", { session: false }) , userController.delete)
 
 // Comments
 router.get("/comments/:commentId", commentController.getComment)
-router.post("/comments/:commentId", commentController.create)
-router.put("/comments/:commentId", commentController.update)
-router.delete("/comments/:commentId", commentController.delete)
+router.post("/comments" , passport.authenticate("jwt", { session: false }) , commentController.create)
+router.put("/comments/:commentId", passport.authenticate("jwt", { session: false }) , commentController.update)
+router.delete("/comments/:commentId", passport.authenticate("jwt", { session: false }) , commentController.delete)
 
 module.exports = router

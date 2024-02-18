@@ -7,10 +7,6 @@ const User = require("../models/user")
 
 const app = express()
 
-exports.getUser = asyncHandler(async (req, res, next) => {
-
-})
-
 exports.create = [
     body('userName').custom(async (value) => {
         let eUser = await User.findOne({ userName: value })

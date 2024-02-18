@@ -6,6 +6,7 @@ const cors = require("cors")
 const bcrypt = require("bcryptjs")
 const JwtStrategy = require('passport-jwt').Strategy
 const ExtractJwt = require('passport-jwt').ExtractJwt;
+const User = require("./models/user")
 
 require('dotenv').config()
 
@@ -30,20 +31,18 @@ const options = {
 
 passport.use(new JwtStrategy(options, function (jwt_payload, done) {
 
-    User.findOne({ _id: jwt_payload.sub }, function (err, user) {
-
-        if (err) {
-            return done(err, false);
-        }
-        if (user) {
-            return done(null, user);
-        } else {
-            return done(null, false);
-        }
-
-    });
-
-}));
+    User.findOne({ _id: jwt_payload.sub })
+        .then(function (user) {
+            if (user) {
+                return done(null, user);
+            } else {
+                return done(null, false);
+            }
+        })
+        .catch((err) => {
+            res.json({ msg: err})
+        })
+}))
 
 app.use(cors())
 app.use(session({ secret: process.env.SESSION_SEC, resave: false, saveUninitialized: true, cookie: { maxAge: 3600000 } }));
