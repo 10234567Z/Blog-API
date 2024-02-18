@@ -45,28 +45,23 @@ exports.create = [
         if (!error.isEmpty()) {
             return res.json(error)
         }
-        const user = await User.findOne({ userName: req.body.userName })
-        if (req.user.userName !== user.userName) {
-            res.json({success: false , msg: "Unauthorized to post with this username"})
-        }
-        else {
-            const currentdate = new Date();
-            const datetime = currentdate.getDate() + "/"
-                + (currentdate.getMonth() + 1) + "/"
-                + currentdate.getFullYear() + " @ "
-                + currentdate.getHours() + ":"
-                + currentdate.getMinutes() + ":"
-                + currentdate.getSeconds();
-            const blog = new Blog({
-                user: user._id,
-                title: req.body.title,
-                text: req.body.text,
-                timeStamp: datetime,
-                public: req.body.public
-            })
-            await blog.save()
-            res.json({ success: true, blog: blog })
-        }
+        const currentdate = new Date();
+        const datetime = currentdate.getDate() + "/"
+            + (currentdate.getMonth() + 1) + "/"
+            + currentdate.getFullYear() + " @ "
+            + currentdate.getHours() + ":"
+            + currentdate.getMinutes() + ":"
+            + currentdate.getSeconds();
+        const blog = new Blog({
+            user: req.user._id,
+            title: req.body.title,
+            text: req.body.text,
+            timeStamp: datetime,
+            public: req.body.public
+        })
+        await blog.save()
+        res.json({ success: true, blog: blog })
+
     })
 ]
 
@@ -86,20 +81,27 @@ exports.update = [
         if (!error.isEmpty()) {
             return res.json(error)
         }
-        const blog = await Blog.findOne({ _id : req.params['blogId'] }).populate('user').exec()
+        const blog = await Blog.findOne({ _id: req.params['blogId'] }).populate('user').exec()
         if (req.user.userName !== blog.user.userName) {
-            res.json({success: false , msg: "Unauthorized to edit"})
+            res.json({ success: false, msg: "Unauthorized to edit" })
         }
         else {
             await Blog.findOneAndUpdate({ _id: req.params['blogId'] }, {
                 title: req.body.title,
                 text: req.body.text,
                 public: req.body.public
-            }, {new: true}).then((blog) => res.json({success: true , blog: blog}))
+            }, { new: true }).then((blog) => res.json({ success: true, blog: blog }))
         }
     })
 ]
 
 exports.delete = asyncHandler(async (req, res, next) => {
-    res.json("Delete : To be implemented")
+    const blog = await Blog.findOne({ _id: req.params['blogId'] }).populate('user').exec()
+    if (req.user.userName !== blog.user.userName) {
+        res.json({ success: false, msg: "Unauthorized to delete" })
+    }
+    else {
+        await Blog.findByIdAndDelete(req.params['blogId'])
+        res.json({ success: true, msg: "Successfully deleted your blog" })
+    }
 })
