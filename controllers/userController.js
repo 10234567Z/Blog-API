@@ -13,6 +13,7 @@ exports.create = [
         if (eUser) {
             throw new Error('Username already exists')
         }
+        return
     }),
     body("userName")
         .trim()
@@ -27,7 +28,7 @@ exports.create = [
     asyncHandler(async (req, res, next) => {
         const error = validationResult(req)
         if (!error.isEmpty()) {
-            res.json(error)
+            return res.json(error)
         }
         bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
             if (err) {
