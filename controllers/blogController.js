@@ -18,8 +18,9 @@ exports.getList = asyncHandler(async (req, res, next) => {
     res.json(allBlogs)
 })
 exports.getBlog = asyncHandler(async (req, res, next) => {
-    res.json("Get Blogs : Not implemented yet")
+    
 })
+
 exports.create = [
     body("title")
         .trim()
@@ -43,11 +44,16 @@ exports.create = [
             + currentdate.getHours() + ":"
             + currentdate.getMinutes() + ":"
             + currentdate.getSeconds();
+        if(req.user){
 
+        }
+        else{
+            
+        }
         const blog = new Blog({
             user: req.body.user,
             title: req.body.title,
-            text: req.body.text,
+            text: req.user._id,
             timeStamp: datetime,
             public: req.body.public
         })
