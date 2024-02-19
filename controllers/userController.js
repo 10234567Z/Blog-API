@@ -50,7 +50,7 @@ exports.create = [
 ]
 
 exports.login = asyncHandler(async (req, res, next) => {
-    User.findOne({ userName: req.body.userName })
+    await User.findOne({ userName: req.body.userName })
         .then(async (user) => {
 
             if (!user) {
@@ -74,10 +74,12 @@ exports.login = asyncHandler(async (req, res, next) => {
 
 })
 
-exports.update = asyncHandler(async (req, res, next) => {
-    res.json("Update User : To be implemented")
-})
-
 exports.delete = asyncHandler(async (req, res, next) => {
-    res.json("Delete User : To be implemented")
+    const user = await User.findById(req.params['userId'])
+    if(req.user.userName !== user.userName){
+        res.status(401).json({success: false , msg: "Unauthorized to delete this user"})
+    }
+    else{
+        await User.findByIdAndDelete(req.params['userId']).then(() => res.json({success: true , msg: "Successfully deleted " + user.userName}))
+    }
 })
