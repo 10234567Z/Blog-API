@@ -24,8 +24,8 @@ router.post("/login", userController.login)
 router.delete("/users/:userId" , passport.authenticate("jwt", { session: false }) , userController.delete)
 
 // Comments
-router.post("/comments" , passport.authenticate("jwt", { session: false }) , commentController.create)
-router.put("/comments/:commentId", passport.authenticate("jwt", { session: false }) , commentController.update)
-router.delete("/comments/:commentId", passport.authenticate("jwt", { session: false }) , commentController.delete)
+router.post("/blogs/:blogId/comments" , passport.authenticate("jwt", { session: false }) , commentController.create)
+router.put("/blogs/:blogId/comments/:commentId", passport.authenticate("jwt", { session: false }) , commentController.update)
+router.delete("/blogs/:blogId/comments/:commentId", passport.authenticate("jwt", { session: false }) , commentController.delete)
 
 module.exports = router
