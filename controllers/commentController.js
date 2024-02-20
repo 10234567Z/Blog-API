@@ -63,5 +63,23 @@ exports.update = [
 ]
 
 exports.delete = asyncHandler(async (req, res, next) => {
-    res.json("Delete Comment : To be implemented")
+    const comment = await Comment.findOne({ _id: req.params['commentId'] }).populate('user').exec()
+    if (req.user.userName !== comment.user.userName) {
+        res.json({ success: false, msg: "Unauthorized to delete" })
+    }
+    else {
+        const user = await User.findById(req.user._id).populate('comments').exec()
+        const blog = await Blog.findById(req.params['blogId']).populate('comments').exec()
+        const filteredUser = user.comments.filter((ul) => {
+            return ul._id.equals(comment._id) !== true
+        })
+        const filteredBlog = blog.comments.filter((bl) => {
+            return bl._id.equals(comment._id) !== true
+        })
+        await Promise.all([
+            Comment.findByIdAndDelete(req.params['commentId']),
+            Blog.findByIdAndUpdate(req.params['blogId'] , { comments: filteredBlog}),
+            User.findByIdAndUpdate(req.user._id, { comments: filteredUser })
+        ]).then(() => res.json({ success: true }))
+    }
 })
