@@ -24,7 +24,6 @@ router.post("/login", userController.login)
 router.delete("/users/:userId" , passport.authenticate("jwt", { session: false }) , userController.delete)
 
 // Comments
-router.get("/comments/:commentId", commentController.getComment)
 router.post("/comments" , passport.authenticate("jwt", { session: false }) , commentController.create)
 router.put("/comments/:commentId", passport.authenticate("jwt", { session: false }) , commentController.update)
 router.delete("/comments/:commentId", passport.authenticate("jwt", { session: false }) , commentController.delete)
