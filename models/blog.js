@@ -7,7 +7,7 @@ const blogSchema = new Schema({
     text: { type: String, minlength: 100, required: true },
     timeStamp: { type: String, required: true },
     public: { type: Boolean, required: true },
-    comments: [{ type: Schema.ObjectId, ref: "Comment" }],
+    comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
 })
 
 module.exports = mongoose.model("Blog", blogSchema)

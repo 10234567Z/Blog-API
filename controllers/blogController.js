@@ -59,9 +59,14 @@ exports.create = [
             timeStamp: datetime,
             public: req.body.public
         })
-        await blog.save()
-        res.json({ success: true, blog: blog })
-
+        const aUser = await User.findById(blog.user)
+        const user = {
+            blogs: [...aUser.blogs, blog._id]
+        }
+        await Promise.all([
+            User.findByIdAndUpdate(blog.user, user, { new: true }).then((user) => res.json({ success: true, msg: "Updated user's blog list" })),
+            blog.save()
+        ])
     })
 ]
 
@@ -101,7 +106,13 @@ exports.delete = asyncHandler(async (req, res, next) => {
         res.json({ success: false, msg: "Unauthorized to delete" })
     }
     else {
-        await Blog.findByIdAndDelete(req.params['blogId'])
-        res.json({ success: true, msg: "Successfully deleted your blog" })
+        const user = await User.findById(req.user._id).populate('blogs').exec()
+        const filtered = user.blogs.filter((bl) => {
+            return bl._id.equals(blog._id) !== true
+        })
+        await Promise.all([
+            Blog.findByIdAndDelete(req.params['blogId']),
+            User.findByIdAndUpdate(req.user._id , { blogs: filtered })
+        ]).then(() => res.json({success: true}))
     }
 })
