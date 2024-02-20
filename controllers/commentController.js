@@ -7,10 +7,14 @@ const Blog = require("../models/blog")
 
 exports.create = [
     body('text')
-        .isLength({min: 1})
+        .isLength({ min: 1 })
         .escape()
         .withMessage("Should be atleast a word long."),
-    asyncHandler(async(req , res , next) => {
+    asyncHandler(async (req, res, next) => {
+        const error = validationResult(req)
+        if (!error.isEmpty()) {
+            return res.json(error)
+        }
         const currentdate = new Date();
         const datetime = currentdate.getDate() + "/"
             + (currentdate.getMonth() + 1) + "/"
@@ -26,20 +30,38 @@ exports.create = [
         })
         const user = await User.findById(req.user._id)
         const blog = await Blog.findById(req.params['blogId'])
-        const uComments = [...user.comments , comment._id]
-        const bComments = [...blog.comments , comment._id]
+        const uComments = [...user.comments, comment._id]
+        const bComments = [...blog.comments, comment._id]
         await Promise.all([
             comment.save(),
-            User.findByIdAndUpdate(req.user._id , {comments: uComments}),
-            Blog.findByIdAndUpdate(req.params['blogId'] , {comments: bComments})
-        ]).then(() => res.json({success: true , comment: comment}))
+            User.findByIdAndUpdate(req.user._id, { comments: uComments }),
+            Blog.findByIdAndUpdate(req.params['blogId'], { comments: bComments })
+        ]).then(() => res.json({ success: true, comment: comment }))
     })
 ]
 
-exports.update = asyncHandler(async (req , res , next)=> {
-    res.json("Update Comment : To be implemented")
-})
+exports.update = [
+    body('text')
+        .isLength({ min: 1 })
+        .escape()
+        .withMessage("Should be atleast a word long."),
+    asyncHandler(async (req, res, next) => {
+        const error = validationResult(req)
+        if (!error.isEmpty()) {
+            return res.json(error)
+        }
+        const comment = await Comment.findOne({ _id: req.params['commentId'] }).populate('user').exec()
+        if (req.user.userName !== comment.user.userName) {
+            res.json({ success: false, msg: "Unauthorized to edit" })
+        }
+        else {
+            await Comment.findOneAndUpdate({ _id: req.params['commentId'] }, {
+                text: req.body.text,
+            }, { new: true }).then((blog) => res.json({ success: true, blog: blog }))
+        }
+    })
+]
 
-exports.delete = asyncHandler(async (req , res , next)=> {
+exports.delete = asyncHandler(async (req, res, next) => {
     res.json("Delete Comment : To be implemented")
 })
