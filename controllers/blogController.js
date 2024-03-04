@@ -14,7 +14,7 @@ exports.home = asyncHandler(async (req, res, next) => {
 })
 
 exports.getList = asyncHandler(async (req, res, next) => {
-    const allBlogs = await Blog.find({})
+    const allBlogs = await Blog.find({}).populate('user').exec()
     if (!allBlogs.length) {
         res.json("No blogs present")
     }
