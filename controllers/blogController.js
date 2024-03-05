@@ -22,7 +22,13 @@ exports.getList = asyncHandler(async (req, res, next) => {
 })
 
 exports.getBlog = asyncHandler(async (req, res, next) => {
-    const blog = await Blog.findById(req.params['blogId']).populate('comments').populate('user').exec()
+    const blog = await Blog.findById(req.params['blogId']).populate(['comments','user' , 
+                                                                        {
+                                                                            path: 'comments',
+                                                                            populate: {
+                                                                                path: 'user'
+                                                                            }
+                                                                        }]).exec()
     if (!blog) {
         res.json({ success: false, msg: "No blog found with that id" })
     }
