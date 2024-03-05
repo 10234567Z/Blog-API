@@ -10,7 +10,6 @@ const userController = require("../controllers/userController")
 const commentController = require("../controllers/commentController")
 
 // Index and Blog routes
-router.get("/", blogController.home)
 router.get("/blogs", blogController.getList)
 router.get("/blogs/:blogId", blogController.getBlog)
 router.post("/blogs", passport.authenticate("jwt", { session: false }), blogController.create)

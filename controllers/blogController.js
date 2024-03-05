@@ -3,15 +3,6 @@ const asyncHandler = require("express-async-handler");
 
 const Blog = require("../models/blog")
 const User = require("../models/user")
-const utils = require("../config/utils")
-
-exports.home = asyncHandler(async (req, res, next) => {
-    const firstFive = await Blog.find({}).limit(5)
-    if (!firstFive.length) {
-        res.json("No blogs present yet...But you can make it!")
-    }
-    res.json(firstFive)
-})
 
 exports.getList = asyncHandler(async (req, res, next) => {
     const allBlogs = await Blog.find({}).populate('user').exec()
