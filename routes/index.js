@@ -21,6 +21,7 @@ router.delete("/blogs/:blogId", passport.authenticate("jwt", { session: false })
 router.post("/signup", userController.create)
 router.post("/login", userController.login)
 router.delete("/users/:userId" , passport.authenticate("jwt", { session: false }) , userController.delete)
+router.get("/user", passport.authenticate("jwt", { session: false }) , userController.getUser)
 
 // Comments
 router.post("/blogs/:blogId/comments" , passport.authenticate("jwt", { session: false }) , commentController.create)

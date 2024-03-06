@@ -7,6 +7,17 @@ const User = require("../models/user")
 
 const app = express()
 
+exports.getUser = asyncHandler(async (req, res, next) =>{
+    const user = await User.findById(req.user._id)
+    if(!user){
+        res.json({success: false , msg: "Unauthorized to view this user"})
+    }
+    else
+    {
+        res.json({success: true , user: user})
+    }
+})
+
 exports.create = [
     body('userName').custom(async (value) => {
         let eUser = await User.findOne({ userName: value })
