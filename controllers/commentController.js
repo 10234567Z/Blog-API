@@ -57,7 +57,7 @@ exports.update = [
         else {
             await Comment.findOneAndUpdate({ _id: req.params['commentId'] }, {
                 text: req.body.text,
-            }, { new: true }).then((blog) => res.json({ success: true, blog: blog }))
+            }, { new: true }).then((comment) => res.json({ success: true, comment: comment }))
         }
     })
 ]
