@@ -84,13 +84,3 @@ exports.login = asyncHandler(async (req, res, next) => {
         });
 
 })
-
-exports.delete = asyncHandler(async (req, res, next) => {
-    const user = await User.findById(req.params['userId'])
-    if(req.user.userName !== user.userName){
-        res.status(401).json({success: false , msg: "Unauthorized to delete this user"})
-    }
-    else{
-        await User.findByIdAndDelete(req.params['userId']).then(() => res.json({success: true , msg: "Successfully deleted " + user.userName}))
-    }
-})

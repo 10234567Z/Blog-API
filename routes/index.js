@@ -20,7 +20,6 @@ router.delete("/blogs/:blogId", passport.authenticate("jwt", { session: false })
 // User
 router.post("/signup", userController.create)
 router.post("/login", userController.login)
-router.delete("/users/:userId" , passport.authenticate("jwt", { session: false }) , userController.delete)
 router.get("/user", passport.authenticate("jwt", { session: false }) , userController.getUser)
 
 // Comments
