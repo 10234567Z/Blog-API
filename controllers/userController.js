@@ -8,7 +8,7 @@ const User = require("../models/user")
 const app = express()
 
 exports.getUser = asyncHandler(async (req, res, next) =>{
-    const user = await User.findById(req.user._id)
+    const user = await User.findById(req.user._id).populate(['blogs , comments']).exec()
     if(!user){
         res.json({success: false , msg: "Unauthorized to view this user"})
     }
