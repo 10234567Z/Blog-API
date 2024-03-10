@@ -20,7 +20,7 @@ exports.getUser = asyncHandler(async (req, res, next) =>{
 
 exports.create = [
     body('userName').custom(async (value) => {
-        let eUser = await User.findOne({ userName: value })
+        let eUser = await User.findOne({ userName: value }).populate(['blogs', 'comments']).exec()
         if (eUser) {
             throw new Error('Username already exists')
         }
@@ -61,7 +61,7 @@ exports.create = [
 ]
 
 exports.login = asyncHandler(async (req, res, next) => {
-    await User.findOne({ userName: req.body.userName })
+    await User.findOne({ userName: req.body.userName }).populate(['blogs', 'comments']).exec()
         .then(async (user) => {
 
             if (!user) {
